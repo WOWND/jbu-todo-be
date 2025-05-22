@@ -1,0 +1,75 @@
+#spring:
+#  mvc:
+#    cors:
+#      allowed-origins:
+#        - "http://localhost:3000"
+#        - "http://192.168.0.164:3000"  # 실제 프론트가 띄워진 IP
+#      allowed-methods: "*"
+#      allowed-headers: "*"
+#      allow-credentials: true
+#  datasource:
+#    url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres
+#    username: postgres
+#    password: "wndqneoWkd!"
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        format_sql: true
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.web: DEBUG
+#    org.springframework.security: DEBUG
+#    org.hibernate.SQL: DEBUG
+#kakao:
+#  client_id: 52c4872fc30d423c710bb20bb07f874e
+#  redirect_uri: http://localhost:3000/callback
+#jwt:
+#  secret: J8sDk12#8dSk@90sLqpZ!7xWmrXn4KzQ
+#server:
+#  address: 0.0.0.0
+#  port: 8080
+
+#https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=52c4872fc30d423c710bb20bb07f874e&redirect_uri=http://localhost:8080/member/login
+#4257046343
+
+spring:
+  mvc:
+    cors:
+      allowed-origins:
+        - "http://localhost:3000"
+        - "http://192.168.0.164:3000"  # 실제 프론트가 띄워진 IP
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+  spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/todoapp
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+kakao:
+  client_id: 52c4872fc30d423c710bb20bb07f874e
+  redirect_uri: http://localhost:3000/callback
+jwt:
+  secret: J8sDk12#8dSk@90sLqpZ!7xWmrXn4KzQ
+server:
+  address: 0.0.0.0
+  port: 8080
+ip:
+  address: http://192.168.0.34:8080
