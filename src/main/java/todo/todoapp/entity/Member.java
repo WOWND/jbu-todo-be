@@ -2,7 +2,9 @@ package todo.todoapp.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.security.AuthProvider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +12,18 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
+
+
+
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
     private String email;
+
+    @Column(unique = true)
+    private String username; // ID (로그인용)
+    private String password;
 
     @Column(unique = true)
     private Long kakaoId;
@@ -29,8 +38,10 @@ public class Member {
     private List<Routine> routines = new ArrayList<>();
 
     @Builder
-    public Member(String email, String nickName, String profileUrl, String introText, Long kakaoId) {
+    public Member(String email,String username, String password, String nickName, String profileUrl, String introText, Long kakaoId) {
         this.email = email;
+        this.username = username;
+        this.password = password;
         this.nickName = nickName;
         this.profileUrl = profileUrl;
         this.introText = introText;

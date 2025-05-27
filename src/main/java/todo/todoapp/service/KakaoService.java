@@ -11,11 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import todo.todoapp.entity.Category;
 import todo.todoapp.exception.SignupRequiredException;
 import todo.todoapp.dto.member.LoginResponse;
 import todo.todoapp.dto.kakao.KakaoTokenResponse;
 import todo.todoapp.dto.kakao.KakaoUserInfoResponse;
-import todo.todoapp.dto.member.SignupRequest;
+import todo.todoapp.dto.member.KakaoSignupRequest;
 import todo.todoapp.entity.Member;
 import todo.todoapp.repository.MemberRepository;
 import todo.todoapp.security.JwtProvider;
@@ -29,12 +30,12 @@ public class KakaoService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
-    private final MemberService memberService;
+    private final CategoryService categoryService;
 
     @Value("${kakao.client_id}")
     private String clientId;
 
-    @Value("${app.backend-url}")
+    @Value("${app.domain}")
     private String serverUrl;
 
 
@@ -109,14 +110,10 @@ public class KakaoService {
 
             String accessToken = jwtProvider.createAccessToken(member.getId());
             //String refreshToken = jwtProvider.createRefreshToken(member.getId());
-            return LoginResponse.builder()
-                    .accessToken(accessToken)
-                    //.refreshToken(refreshToken)
-                    .build();
+            return LoginResponse.from(member, accessToken);
 
         } else {
             String temporaryToken = jwtProvider.createTemporaryToken(kakaoId);
-
             throw new SignupRequiredException(temporaryToken,
                     userInfo.getKakaoAccount().getProfile().getNickName(),
                     userInfo.getKakaoAccount().getProfile().getProfileImageUrl()
@@ -124,15 +121,14 @@ public class KakaoService {
         }
     }
 
-    public LoginResponse signup(SignupRequest request,Long kakaoId) {
+    public LoginResponse signup(KakaoSignupRequest request, Long kakaoId) {
         Member member = memberRepository.save(request.toEntity(kakaoId));
+        categoryService.createDefaultCategory(member);
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
         //String refreshToken = jwtProvider.createRefreshToken(member.getId());
 
-        return LoginResponse.builder()
-                .accessToken(accessToken)
-                //.refreshToken(refreshToken)  //리프레시 토큰 보류
-                .build();
+
+        return LoginResponse.from(member, accessToken);
     }
 }

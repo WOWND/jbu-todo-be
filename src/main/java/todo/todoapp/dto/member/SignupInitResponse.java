@@ -8,13 +8,13 @@ import todo.todoapp.exception.SignupRequiredException;
 @Setter
 public class SignupInitResponse {
     public String status;
-    public String accessToken;
+    public String temporaryToken;
     public String nickname;
     public String profileUrl;
 
     public SignupInitResponse(SignupRequiredException e) {
         this.status = e.getStatus();
-        this.accessToken = e.getTemporaryToken();
+        this.temporaryToken = e.getTemporaryToken();
         this.nickname = e.getNickname();
         this.profileUrl = e.getProfileUrl();
     }

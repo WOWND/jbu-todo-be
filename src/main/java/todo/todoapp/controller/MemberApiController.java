@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import todo.todoapp.dto.member.MemberInfo;
-import todo.todoapp.dto.member.MemberUpdateRequest;
+import todo.todoapp.dto.member.*;
 import todo.todoapp.service.MemberService;
 
 import java.util.Map;
@@ -19,7 +18,25 @@ import java.util.Map;
 public class MemberApiController {
     private final MemberService memberService;
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        LoginResponse loginResponse = memberService.login(request);
+        return ResponseEntity.ok(loginResponse);
+    }
 
+    @PostMapping("/signup")
+    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
+        LoginResponse loginResponse = memberService.signup(request);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+
+    //ID 중복 검사 (exists?username=abc)
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> checkUsernameDuplicate(@RequestParam String username) {
+        boolean exists = memberService.existsByUsername(username);
+        return ResponseEntity.ok(exists);
+    }
 
     //프로필 이미지 업로드
     @PostMapping("/me/upload-profile")

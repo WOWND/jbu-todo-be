@@ -6,21 +6,19 @@ import todo.todoapp.entity.Member;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class KakaoSignupRequest {
     private String email;
-    private String username;
-    private String password;
     private String nickname;
+    private String profileUrl;
     private String introText;
 
-    //자체 로그인
-    public Member toEntity(String password,String defaultProfile) {
+    //카카오
+    public Member toEntity(Long kakaoId) {
         return Member.builder()
-                .email(this.email)
-                .profileUrl(defaultProfile)
-                .username(this.username)
-                .password(password)
+                .kakaoId(kakaoId)
                 .nickName(this.nickname)
+                .email(this.email)
+                .profileUrl(this.profileUrl)
                 .introText(this.introText)
                 .build();
     }

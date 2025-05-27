@@ -7,7 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import todo.todoapp.dto.member.SignupInitResponse;
 import todo.todoapp.exception.SignupRequiredException;
-import todo.todoapp.dto.member.SignupRequest;
+import todo.todoapp.dto.member.KakaoSignupRequest;
 import todo.todoapp.service.KakaoService;
 
 import java.util.Map;
@@ -32,7 +32,7 @@ public class KakaoAuthController {
 
     //카카오 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest request, @AuthenticationPrincipal Long kakaoId) {
+    public ResponseEntity<?> signup(@RequestBody KakaoSignupRequest request, @AuthenticationPrincipal Long kakaoId) {
         log.info("--------------------회원가입 요청-------------------------");
         return ResponseEntity.ok(kakaoService.signup(request,kakaoId));
     }

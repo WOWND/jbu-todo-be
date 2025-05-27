@@ -30,7 +30,7 @@ public class RoutineService {
     //루틴 생성
     public Long createRoutine(RoutineRequest routineRequest, Long memberId) {
         Member member = memberService.findById(memberId);
-        Category category = categoryService.findById(routineRequest.getCategoryId());
+        Category category = categoryService.findById(routineRequest.getCategoryId(),memberId);
 
         Routine routine = routineRequest.toEntity(member,category);
 
@@ -68,7 +68,7 @@ public class RoutineService {
 
         //컨텐츠 수정
         if (routineRequest.getUpdateType() == CONTENT) {
-            Category category = categoryService.findById(routineRequest.getCategoryId());
+            Category category = categoryService.findById(routineRequest.getCategoryId(),memberId);
             routine.updateContent(category,routineRequest.getTitle(), routineRequest.getDescription(),
                     routineRequest.getMin(), routineRequest.getBase(), routineRequest.getMax());
         } else if (routineRequest.getUpdateType() == SCHEDULE) { //스케줄 수정

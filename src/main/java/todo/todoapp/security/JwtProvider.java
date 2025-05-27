@@ -110,6 +110,7 @@ public class JwtProvider {
 
     // 토큰에서 type 클레임 추출
     public String getTokenType(String token) {
+        log.info("{}", token);
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(key)

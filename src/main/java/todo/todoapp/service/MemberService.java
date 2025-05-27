@@ -3,13 +3,14 @@ package todo.todoapp.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import todo.todoapp.dto.member.MemberInfo;
-import todo.todoapp.dto.member.MemberUpdateRequest;
+import todo.todoapp.dto.member.*;
 import todo.todoapp.entity.Member;
 import todo.todoapp.repository.MemberRepository;
+import todo.todoapp.security.JwtProvider;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,9 +25,45 @@ import java.util.UUID;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final CategoryService categoryService;
 
-    @Value("${app.backend-url}")
+
+    @Value("${app.domain}")
     private String serverUrl;
+
+    @Value("${app.default-profile}")
+    public String defaultProfile;
+
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        String username = request.getUsername();
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다."));
+
+        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+            throw new IllegalArgumentException("아이디 또는 비밀번호가 올바르지 않습니다.");
+        }
+        return LoginResponse.from(member, jwtProvider.createAccessToken(member.getId()));
+    }
+
+
+
+    public LoginResponse signup(SignupRequest request) {
+        if (existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
+        }
+        Member member = request.toEntity(passwordEncoder.encode(request.getPassword()),defaultProfile);
+        Member saved = memberRepository.save(member);
+        categoryService.createDefaultCategory(saved);
+        return LoginResponse.from(member, jwtProvider.createAccessToken(saved.getId()));
+    }
+
+    public boolean existsByUsername(String username) {
+        return memberRepository.existsByUsername(username);
+    }
+
 
     //회원 조회
     @Transactional(readOnly = true)

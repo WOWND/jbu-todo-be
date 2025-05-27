@@ -20,11 +20,13 @@ public class Category {
     @JoinColumn(name="member_id")
     private Member member;
 
+    private boolean isDefaultCategory;
 
     @Builder
-    public Category(Member member,String title) {
+    public Category(Member member,String title,boolean isDefaultCategory) {
         this.member = member;
         this.title = title;
+        this.isDefaultCategory = isDefaultCategory;
     }
 
     public void updateTitle(String title) {

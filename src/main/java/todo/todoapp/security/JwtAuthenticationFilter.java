@@ -27,8 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // 로그인과 이미지 패스
-        if (path.equals("/kakao/login") || path.startsWith("/images/")) {
+
+        if (path.endsWith("/login")|| path.equals("/api/members/signup") || path.startsWith("/images/")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("요청 받은 토큰{}", token);
 
         //회원가입은 임시토큰을 발급해주자
-        if (path.equals("/kakao/signup")) {
+        if (path.equals("/api/auth/kakao/signup")) {
             if (token == null || !"temp".equals(jwtProvider.getTokenType(token)) || !jwtProvider.validateToken(token, "temp")) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("임시 토큰만 접근할 수 있습니다.");
