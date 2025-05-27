@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import todo.todoapp.SignupRequiredException;
+import todo.todoapp.exception.SignupRequiredException;
 import todo.todoapp.dto.member.LoginResponse;
 import todo.todoapp.dto.kakao.KakaoTokenResponse;
 import todo.todoapp.dto.kakao.KakaoUserInfoResponse;
@@ -29,16 +29,18 @@ public class KakaoService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
+    private final MemberService memberService;
 
     @Value("${kakao.client_id}")
     private String clientId;
 
-    @Value("${ip.address}")
+    @Value("${app.backend-url}")
     private String serverUrl;
 
 
     private static final String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
     private static final String KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
+
 
     private String getAccessTokenFromKakao(String code) {
         KakaoTokenResponse kakaoTokenResponseDto = WebClient.create(KAUTH_TOKEN_URL_HOST).post()
@@ -81,7 +83,7 @@ public class KakaoService {
                 .bodyToMono(KakaoUserInfoResponse.class)
                 .block();
 
-        //기본 프사라면 우리가 설정한 기본 프사를 넣어주자
+        //기본 프사라면 우리의 기본 프사를 등록
         if (userInfo.getKakaoAccount().getProfile().getIsDefaultImage()) {
             userInfo.getKakaoAccount().getProfile().setProfileImageUrl(serverUrl + "/images/profile/default_image.jpg");
         }
@@ -106,15 +108,13 @@ public class KakaoService {
             Member member = existingMember.get();
 
             String accessToken = jwtProvider.createAccessToken(member.getId());
-            String refreshToken = jwtProvider.createRefreshToken(member.getId());
-            log.info("--------------로그인 성공 ----------------");
+            //String refreshToken = jwtProvider.createRefreshToken(member.getId());
             return LoginResponse.builder()
                     .accessToken(accessToken)
                     //.refreshToken(refreshToken)
                     .build();
 
         } else {
-            log.info("--------------회원가입 필요 ---------------");
             String temporaryToken = jwtProvider.createTemporaryToken(kakaoId);
 
             throw new SignupRequiredException(temporaryToken,
@@ -124,15 +124,12 @@ public class KakaoService {
         }
     }
 
-
-
     public LoginResponse signup(SignupRequest request,Long kakaoId) {
         Member member = memberRepository.save(request.toEntity(kakaoId));
 
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        String refreshToken = jwtProvider.createRefreshToken(member.getId());
+        //String refreshToken = jwtProvider.createRefreshToken(member.getId());
 
-        log.info("--------------회원가입 성공 ----------------");
         return LoginResponse.builder()
                 .accessToken(accessToken)
                 //.refreshToken(refreshToken)  //리프레시 토큰 보류

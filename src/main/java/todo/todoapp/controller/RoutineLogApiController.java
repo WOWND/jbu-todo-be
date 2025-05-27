@@ -14,10 +14,11 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("routine-logs")
+@RequestMapping("/api/routine-logs")
 public class RoutineLogApiController {
     private final RoutineLogService routineLogService;
 
+    //루틴 로그 상태 수정
     @PatchMapping("/{id}")
     public ResponseEntity<?> changeStatus(@PathVariable("id") Long routineLogId,
                                           @RequestBody RoutineLogUpdateRequest request, @AuthenticationPrincipal Long memberId) {
@@ -25,6 +26,7 @@ public class RoutineLogApiController {
         return ResponseEntity.noContent().build();
     }
 
+    //날짜로 조회
     @GetMapping
     public ResponseEntity<?> getLogsByDate(@RequestBody Map<String, LocalDate> request,
                                            @AuthenticationPrincipal Long memberId) {

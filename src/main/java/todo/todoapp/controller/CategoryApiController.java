@@ -4,41 +4,49 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import todo.todoapp.dto.category.CategoryCreateRequest;
+import todo.todoapp.dto.category.CategoryRequest;
 import todo.todoapp.dto.category.CategoryResponse;
 import todo.todoapp.service.CategoryService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("categories")
+@RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryApiController {
     private final CategoryService categoryService;
 
+    //카테고리 생성
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CategoryCreateRequest request,
+    public ResponseEntity<?> create(@RequestBody CategoryRequest request,
                                     @AuthenticationPrincipal Long memberId) {
         Long id = categoryService.create(memberId, request);
         return ResponseEntity.ok(id);
     }
 
+    //카테고리 목록 조회
     @GetMapping
     public ResponseEntity<?> getCategories(@AuthenticationPrincipal Long memberId) {
-        List<CategoryResponse> categoryResponses = categoryService.get(memberId);
+        List<CategoryResponse> categoryResponses = categoryService.getById(memberId);
         return ResponseEntity.ok(categoryResponses);
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateCategories(@AuthenticationPrincipal Long memberId) {
-        categoryService.update();
 
-        return ResponseEntity.ok(null);
+    //카테고리 수정
+    @PutMapping
+    public ResponseEntity<?> updateCategories(@RequestBody CategoryRequest request,
+                                              @AuthenticationPrincipal Long memberId) {
+
+        CategoryResponse updated = categoryService.update(request, memberId);
+        return ResponseEntity.ok(updated);
     }
 
+
+    //카테고리 삭제
     @DeleteMapping
-    public ResponseEntity<?> deleteCategories(@AuthenticationPrincipal Long memberId) {
-        categoryService.delete();
-        return ResponseEntity.ok(null);
+    public ResponseEntity<?> deleteCategories(@RequestBody CategoryRequest request,
+                                              @AuthenticationPrincipal Long memberId) {
+        categoryService.delete(request,memberId);
+        return ResponseEntity.noContent().build();
     }
 }

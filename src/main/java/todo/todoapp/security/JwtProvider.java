@@ -5,7 +5,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import todo.todoapp.repository.MemberRepository;
 
 import java.security.Key;
 import java.util.Date;
@@ -22,9 +21,10 @@ public class JwtProvider {
 
 
 
-    public JwtProvider(@Value("${jwt.secret}") String secret, MemberRepository memberRepository) {
+    public JwtProvider(@Value("${jwt.secret}") String secret) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
+
 
     // Access Token 생성
     public String createAccessToken(Long memberId) {
@@ -54,7 +54,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    // 카카오 ID 기반 임시 액세스 토큰 발급
+    // 카카오 ID 기반 임시 토큰 생성
     public String createTemporaryToken(Long kakaoId) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + TEMPORARY_TOKEN_EXPIRE_TIME); // 5분 유효
@@ -106,18 +106,6 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
         return Long.parseLong(claims.getSubject());
-    }
-
-
-
-    // 토큰 만료 시간 추출
-    public Date getExpiration(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
     }
 
     // 토큰에서 type 클레임 추출

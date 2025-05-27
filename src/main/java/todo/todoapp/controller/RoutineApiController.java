@@ -12,7 +12,7 @@ import todo.todoapp.service.RoutineService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/routines")
+@RequestMapping("/api/routines")
 @RequiredArgsConstructor
 public class RoutineApiController {
     private final RoutineService routineService;
@@ -35,7 +35,7 @@ public class RoutineApiController {
     //개별 루틴 조회
     @GetMapping("/{id}")
     public ResponseEntity<?> getRoutine(@PathVariable("id") Long routineId, @AuthenticationPrincipal Long memberId) {
-        RoutineResponse routine = routineService.getRoutine(memberId, routineId);
+        RoutineResponse routine = routineService.getById(memberId, routineId);
         return ResponseEntity.ok(routine);
     }
 
@@ -43,14 +43,14 @@ public class RoutineApiController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateRoutine(@PathVariable("id") Long routineId, @RequestBody RoutineUpdateRequest request,
                                            @AuthenticationPrincipal Long memberId) {
-        RoutineResponse routine = routineService.updateRoutine(request, routineId, memberId);
+        RoutineResponse routine = routineService.update(request, routineId, memberId);
         return ResponseEntity.ok(routine);
     }
 
     //루틴 삭제
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteRoutine(@PathVariable("id") Long routineId, @AuthenticationPrincipal Long memberId) {
-        routineService.deleteRoutine(routineId,memberId);
+        routineService.delete(routineId,memberId);
         return ResponseEntity.noContent().build();
     }
 }

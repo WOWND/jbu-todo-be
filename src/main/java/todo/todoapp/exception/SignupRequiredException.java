@@ -1,4 +1,4 @@
-package todo.todoapp;
+package todo.todoapp.exception;
 
 
 import lombok.Getter;

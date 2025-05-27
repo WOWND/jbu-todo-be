@@ -53,7 +53,7 @@ public class RoutineService {
 
     //개별 루틴 조회하기
     @Transactional(readOnly = true)
-    public RoutineResponse getRoutine(Long memberId, Long routineId) {
+    public RoutineResponse getById(Long memberId, Long routineId) {
         Routine routine = findRoutineById(routineId);
         validateOwnership(routine,memberId);
 
@@ -62,7 +62,7 @@ public class RoutineService {
 
 
     //루틴 수정하기
-    public RoutineResponse updateRoutine(RoutineUpdateRequest routineRequest, Long routineId, Long memberId) {
+    public RoutineResponse update(RoutineUpdateRequest routineRequest, Long routineId, Long memberId) {
         Routine routine = findRoutineById(routineId);
         validateOwnership(routine,memberId);
 
@@ -82,7 +82,7 @@ public class RoutineService {
     }
 
     //루틴 삭제하기
-    public void deleteRoutine(Long routineId, Long memberId) {
+    public void delete(Long routineId, Long memberId) {
         Routine routine = findRoutineById(routineId);
         validateOwnership(routine,memberId);
 

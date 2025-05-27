@@ -25,18 +25,18 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Value("${ip.address}")
+    @Value("${app.backend-url}")
     private String serverUrl;
 
+    //회원 조회
     @Transactional(readOnly = true)
-    public MemberInfo getMember(Long memberId) {
+    public MemberInfo getById(Long memberId) {
         Member member = findById(memberId);
-
         return MemberInfo.from(member);
     }
 
-    //회원 삭제
-    public void deleteMember(Long memberId) {
+    //회원 탈퇴
+    public void delete(Long memberId) {
         Member member = findById(memberId);
         memberRepository.delete(member);
     }
@@ -46,8 +46,18 @@ public class MemberService {
     public String uploadProfileImage(Long memberId, MultipartFile file) {
         Member member = findById(memberId);
 
+        //기존 이미지 url
+        String currentUrl = member.getProfileUrl();
+
+        // 새 프로필 업로드
         String uploadDir = "uploads/profile/";
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.lastIndexOf('.') != -1) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
+        }
+        String uuid = UUID.randomUUID().toString();
+        String fileName = uuid + (extension.isEmpty() ? "" : "." + extension);
 
         try {
             Path uploadPath = Paths.get(uploadDir);
@@ -62,15 +72,26 @@ public class MemberService {
 
         String imageUrl = serverUrl + "/images/profile/" + fileName;
         member.uploadProfileImage(imageUrl);
+
+        // 기존 프로필 이미지가 기본 프로필이 아니면 삭제
+        if (currentUrl != null && !currentUrl.contains("default")) {
+            String oldFileName = currentUrl.substring(currentUrl.lastIndexOf('/') + 1);
+            Path oldFilePath = Paths.get("uploads/profile/").resolve(oldFileName);
+            try {
+                Files.deleteIfExists(oldFilePath);
+            } catch (IOException e) {
+                log.warn("이전 프로필 이미지 삭제 실패: {}", oldFilePath, e);
+            }
+        }
+
         return imageUrl;
     }
 
     //회원 수정
-    public void updateMember(MemberUpdateRequest request,Long memberId) {
+    public void update(MemberUpdateRequest request, Long memberId) {
         Member member = findById(memberId);
         member.updateProfile(request.nickName, request.introText);
     }
-
 
 
     public Member findById(Long memberId) {

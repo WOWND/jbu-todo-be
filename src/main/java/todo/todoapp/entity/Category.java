@@ -20,12 +20,14 @@ public class Category {
     @JoinColumn(name="member_id")
     private Member member;
 
-    //콘텐츠를 상속해서 매핑?
-
 
     @Builder
     public Category(Member member,String title) {
         this.member = member;
+        this.title = title;
+    }
+
+    public void updateTitle(String title) {
         this.title = title;
     }
 }

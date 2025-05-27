@@ -6,17 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import todo.todoapp.entity.Category;
 import todo.todoapp.entity.Member;
 import todo.todoapp.service.RoutineService;
 
 @Component
 @RequiredArgsConstructor
 public class InitDB {
-
-    @Value("${ip.address}")
+    @Value("${app.backend-url}")
     private String serverUrl;
-
 
     private final InitService service;
 
@@ -31,28 +28,35 @@ public class InitDB {
     @RequiredArgsConstructor
     static class InitService {
         private final EntityManager em;
-        private final RoutineService routineService;
         public void dbInit1(String serverUrl) {
-            Member member = Member.builder()
-                    .nickName("박재중")
-                    .email("testA@gmail.com")
-                    .kakaoId(4257046343L)
+//            Member member = Member.builder()
+//                    .nickName("박재중")
+//                    .email("testA@gmail.com")
+//                    .kakaoId(4257046343L)
+//                    .profileUrl(serverUrl + "/images/profile/default_image.jpg")
+//                    .introText("테스트입니다")
+//                    .build();
+//            em.persist(member);
+            Member member2 = Member.builder()
+                    .nickName("전주은")
+                    .email("testB@gmail.com")
+                    .kakaoId(4260754239L)
                     .profileUrl(serverUrl + "/images/profile/default_image.jpg")
                     .introText("테스트입니다")
                     .build();
-            em.persist(member);
-
-            Category category1 = Category.builder()
-                    .title("아침")
-                    .member(member)
-                    .build();
-            em.persist(category1);
-
-            Category category2 = Category.builder()
-                    .title("저녁")
-                    .member(member)
-                    .build();
-            em.persist(category2);
+            em.persist(member2);
+//
+//            Category category1 = Category.builder()
+//                    .title("학교")
+//                    .member(member)
+//                    .build();
+//            em.persist(category1);
+//
+//            Category category2 = Category.builder()
+//                    .title("개인")
+//                    .member(member)
+//                    .build();
+//            em.persist(category2);
         }
     }
 }

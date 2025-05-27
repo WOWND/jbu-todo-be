@@ -26,14 +26,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        String token = getTokenFromRequest(request);
-        log.info("요청 받은 토큰{}", token);
 
-        // 로그인과 이미지는 열어주자
+        // 로그인과 이미지 패스
         if (path.equals("/kakao/login") || path.startsWith("/images/")) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        String token = getTokenFromRequest(request);
+        log.info("요청 받은 토큰{}", token);
 
         //회원가입은 임시토큰을 발급해주자
         if (path.equals("/kakao/signup")) {
@@ -50,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        //나머지 api는 엑세스 토큰으로 접근하자
+        //나머지 api는 엑세스 토큰으로 접근
         if (token != null && jwtProvider.validateToken(token, "access")) {
             Long memberId = jwtProvider.getIdFromToken(token);
             UsernamePasswordAuthenticationToken authentication =
@@ -64,12 +65,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
 
-        log.info("--------------JWT토큰꺼내기{}-----------",bearer);
-
         if (bearer != null && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
-
         return null;
     }
 }

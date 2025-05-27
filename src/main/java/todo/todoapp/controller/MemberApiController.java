@@ -15,21 +15,24 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-//@RequestMapping("/api/users")
+@RequestMapping("/api/members")
 public class MemberApiController {
-
     private final MemberService memberService;
 
-    @PostMapping("/kakao/upload-profile")
+
+
+    //프로필 이미지 업로드
+    @PostMapping("/me/upload-profile")
     public ResponseEntity<?> uploadProfileImage(@RequestParam("profileImage") MultipartFile file,
                                                 @AuthenticationPrincipal Long memberId) {
         String imageUrl = memberService.uploadProfileImage(memberId, file);
         return ResponseEntity.ok().body(Map.of("imageUrl", imageUrl));
     }
 
-    @GetMapping("/kakao/user-info")
-    public ResponseEntity<MemberInfo> getMemberInfo(@AuthenticationPrincipal Long memberId) {
-        MemberInfo member = memberService.getMember(memberId);
+    //회원 정보 조회
+    @GetMapping("/me")
+    public ResponseEntity<MemberInfo> getInfo(@AuthenticationPrincipal Long memberId) {
+        MemberInfo member = memberService.getById(memberId);
         log.info("------------------{}", member.getEmail());
         log.info("------------------{}", member.getNickName());
         log.info("------------------{}", member.getProfileUrl());
@@ -39,15 +42,19 @@ public class MemberApiController {
     }
 
 
-    @GetMapping("/api/test")
-    public String testApi(@AuthenticationPrincipal Long memberId) {
-        return memberId+"안녕하세요";
-    }
-
-    @PutMapping("/members")
+    //회원 정보 수정
+    @PutMapping("/me")
     public ResponseEntity<?> updateMember(@RequestBody MemberUpdateRequest updateRequest,
                                           @AuthenticationPrincipal Long memberId) {
-        memberService.updateMember(updateRequest, memberId);
+        memberService.update(updateRequest, memberId);
         return ResponseEntity.ok(memberId);
+    }
+
+
+    //회원 탈퇴
+    @DeleteMapping("/me")
+    public ResponseEntity<?> delete(@AuthenticationPrincipal Long memberId) {
+        memberService.delete(memberId);
+        return ResponseEntity.noContent().build();
     }
 }
