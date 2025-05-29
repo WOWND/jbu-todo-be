@@ -16,6 +16,20 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter; // JWT 필터 주입
 
+<<<<<<< HEAD
+=======
+    private static final String[] WHITE_LIST = {
+            "/api/auth/kakao/login",
+            "/api/members/login",
+            "/api/members/signup",
+            "/api/members/exists",
+            "/images/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**"
+    };
+
+>>>>>>> 648baeb (:memo: Swagger 추가)
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

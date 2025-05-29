@@ -68,8 +68,13 @@ public class RoutineService {
 
         //컨텐츠 수정
         if (routineRequest.getUpdateType() == CONTENT) {
+<<<<<<< HEAD
             Category category = categoryService.findById(routineRequest.getCategoryId());
             routine.updateContent(category,routineRequest.getTitle(), routineRequest.getDescription(),
+=======
+            Category category = categoryService.findById(routineRequest.getCategoryId(),memberId);
+            routine.updateContent(category,routineRequest.getTitle(),
+>>>>>>> 648baeb (:memo: Swagger 추가)
                     routineRequest.getMin(), routineRequest.getBase(), routineRequest.getMax());
         } else if (routineRequest.getUpdateType() == SCHEDULE) { //스케줄 수정
             routineLogService.update(routine,routineRequest,memberId);

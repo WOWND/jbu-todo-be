@@ -13,7 +13,7 @@ import java.util.List;
 public class RoutineUpdateRequest {
     private Long categoryId;
     private String title;
-    private String description;
+    //private String description;
     private List<DayOfWeek> repeatDays;
     private LocalDate startDate;
     private LocalDate endDate;

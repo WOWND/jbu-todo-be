@@ -27,8 +27,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
+<<<<<<< HEAD
         // 로그인과 이미지 패스
         if (path.equals("/kakao/login") || path.startsWith("/images/")) {
+=======
+
+        if (path.endsWith("/login") || path.equals("/api/members/exists") || path.equals("/api/members/signup") || path.startsWith("/images/")) {
+>>>>>>> 648baeb (:memo: Swagger 추가)
             filterChain.doFilter(request, response);
             return;
         }

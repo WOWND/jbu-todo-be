@@ -17,7 +17,7 @@ import java.util.List;
 public class RoutineRequest {
     private Long categoryId;
     private String title;
-    private String description;
+    //private String description;
     private List<DayOfWeek> repeatDays;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -30,7 +30,7 @@ public class RoutineRequest {
                 .member(member)
                 .category(category)
                 .title(title)
-                .description(this.description)
+                //.description(this.description)
                 .repeatDays(this.repeatDays)
                 .startDate(this.startDate)
                 .endDate(this.endDate)

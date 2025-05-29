@@ -17,7 +17,7 @@ public class RoutineResponse {
     private Long id;
     private Long categoryId;
     private String title;
-    private String description;
+    //private String description;
     private List<DayOfWeek> repeatDays;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -31,7 +31,6 @@ public class RoutineResponse {
                 routine.getId(),
                 routine.getCategory().getId(),
                 routine.getTitle(),
-                routine.getDescription(),
                 routine.getRepeatDays(),
                 routine.getStartDate(),
                 routine.getEndDate(),

@@ -24,9 +24,3 @@ jwt:
 app:
   frontend-url: frontend-url
   backend-url: backend-url
-
-
-
-
-
-

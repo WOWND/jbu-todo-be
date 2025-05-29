@@ -30,10 +30,9 @@ public class Routine {
     @JoinColumn(name="category_id")
     private Category category;
 
-
     private String title;
 
-    private String description;
+    //private String description;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -56,12 +55,12 @@ public class Routine {
     private List<RoutineLog> routineLogs = new ArrayList<>();
 
     @Builder
-    public Routine(Member member, Category category,String title,String description, List<DayOfWeek> repeatDays, LocalDate startDate,
+    public Routine(Member member, Category category,String title, List<DayOfWeek> repeatDays, LocalDate startDate,
                    LocalDate endDate, String min, String base, String max) {
         this.member = member;
         this.category = category;
         this.title = title;
-        this.description = description;
+        //this.description = description;
         this.repeatDays = repeatDays;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -70,10 +69,10 @@ public class Routine {
         this.max = max;
     }
 
-    public void updateContent(Category category,String title,String description,String min,String base,String max) {
+    public void updateContent(Category category,String title,String min,String base,String max) {
         this.category = category;
         this.title = title;
-        this.description = description;
+        //this.description = description;
         this.min = min;
         this.base = base;
         this.max = max;
