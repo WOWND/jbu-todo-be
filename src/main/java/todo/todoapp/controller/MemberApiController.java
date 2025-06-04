@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class MemberApiController {
 
     @Operation(summary = "자체 회원가입", description = "email, username, password, nickname, introtext를 이용해 회원가입을 진행합니다.", security = @SecurityRequirement(name = ""))
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
+    public ResponseEntity<?> signup(@RequestBody @Valid SignupRequest request) {
         LoginResponse loginResponse = memberService.signup(request);
         return ResponseEntity.ok(loginResponse);
     }

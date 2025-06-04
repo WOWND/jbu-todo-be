@@ -34,11 +34,7 @@ public class KakaoAuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody KakaoCodeRequest request) {
         String code = request.getCode();
-        try {
-            return ResponseEntity.ok(kakaoService.kakaoLogin(code));
-        } catch (SignupRequiredException exception) {
-            return ResponseEntity.status(401).body(new SignupInitResponse(exception));
-        }
+        return ResponseEntity.ok(kakaoService.kakaoLogin(code));
     }
 
     //카카오 회원가입

@@ -24,9 +24,11 @@ public class SecurityConfig {
             "/api/members/signup",
             "/api/members/exists",
             "/images/**",
+            "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/v3/api-docs/**"
+            "/webjars/**",
+            "/error"
     };
 
 >>>>>>> 648baeb (:memo: Swagger 추가)
